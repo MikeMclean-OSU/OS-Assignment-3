@@ -129,25 +129,9 @@ int main(){
                 //Parse file into movie structure
                 processMovieFile(parsefile, &head, &tail);
 
-                //Find year range
-                int highest_year = 0;
-                int lowest_year = 10000;
-                int range;
                 struct movie* node = head;
 
-                while(node != NULL){
-                    if(node->year > highest_year){
-                        highest_year = node->year;
-                    }else if(node->year < lowest_year){
-                        lowest_year = node->year;
-                    }
-                    node = node->next;
-                }
-
                 //Open directory and create files
-                node = head;
-                //range = highest_year - lowest_year;
-                //int* years = malloc(range * sizeof(int));
                 char dir_start[45] = "./";
                 sprintf(dir_start + strlen(dir_start), "%s", dir_name);
                 currDir = opendir(dir_start);
@@ -159,7 +143,7 @@ int main(){
                     sprintf(yearString, "%d", node->year);
                     snprintf(path, sizeof(path), "%s/%s.txt", dir_start, yearString);
                     file = open(path, O_RDWR | O_CREAT | O_APPEND, 0640);
-                    int write_bytes = write(file, node->title, strlen(node->title) + 1);
+                    int write_bytes = write(file, node->title, strlen(node->title));
                     write_bytes = write(file, "\n", 1);
                     close(file);
                     node = node->next; 
@@ -186,7 +170,7 @@ int main(){
     
     }else if (choice1 != 2){
         
-        printf("Invlaid selection, please try again\n\n");
+        printf("You entered an incorrect choice. Try again.\n\n");
     
     }
 
