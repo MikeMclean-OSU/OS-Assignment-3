@@ -4,6 +4,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#include <fcntl.h>
+#include <unistd.h>
 
 struct movie{
     char* title;
@@ -144,26 +146,29 @@ int main(){
 
                 //Open directory and create files
                 node = head;
-                range = highest_year - lowest_year;
-                int* years = malloc(range * sizeof(int));
+                //range = highest_year - lowest_year;
+                //int* years = malloc(range * sizeof(int));
                 char dir_start[45] = "./";
                 sprintf(dir_start + strlen(dir_start), "%s", dir_name);
                 currDir = opendir(dir_start);
                 int file;
+                char yearString[5];
+                char path[100];
 
                 while (node != NULL){
-                    if(years[node->year % range] == 0){
-                        years[node->year % range] = node->year;
-                    }
-                    
-                    node = node->next;
+                    sprintf(yearString, "%d", node->year);
+                    snprintf(path, sizeof(path), "%s/%s.txt", dir_start, yearString);
+                    file = open(path, O_RDWR | O_CREAT | O_APPEND, 0640);
+                    int write_bytes = write(file, node->title, strlen(node->title) + 1);
+                    write_bytes = write(file, "\n", 1);
+                    close(file);
+                    node = node->next; 
                 }
-
+                closedir(currDir);
                 //Reset variables
                 head = NULL;
                 tail = NULL;
                 free(dir_name);
-                
                 size = 0;
                 printf("\n\n");
                 break;
