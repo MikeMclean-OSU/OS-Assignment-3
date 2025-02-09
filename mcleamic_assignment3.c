@@ -60,7 +60,7 @@ void processMovieFile(char* filePath, struct movie **head, struct movie **tail){
 
 int is_valid_file(char *filename){
     size_t len = strlen(filename);
-    return strcmp(filename + len - 4, ".csv") == 0 && strcmp(filename + 7, "movies_");
+    return strcmp(filename + len - 4, ".csv") == 0 && strncmp(filename, "movies_", 7) == 0;
 }
 
 char *make_dir_name(){
